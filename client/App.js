@@ -6,6 +6,8 @@ import AppLoading from 'expo-app-loading';
 
 // Import screens
 import OnboardingScreen from './screens/onboarding/OnboardingScreen';
+import Login from './screens/auth/Login';
+import Signup from './screens/auth/Signup';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +37,8 @@ export default function App() {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Signup" component={Signup} />
       </Stack.Navigator>
     </NavigationContainer>
   );

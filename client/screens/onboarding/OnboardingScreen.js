@@ -4,9 +4,8 @@ import { onboardingScreens } from '../../constants/onboardingFlow';
 
 const OnboardingScreen = ({ navigation }) => {
   const handleComplete = () => {
-    // Navigate to the home screen or login screen when onboarding completes
-    // navigation.navigate('Home');
-    alert('Onboarding completed!');
+    navigation.navigate('Login');
+    // alert('Onboarding completed!');
   };
 
   return (
