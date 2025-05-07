@@ -46,7 +46,7 @@ export const signupFields = [
     keyboardType: 'default',
   },
   {
-    name: 'phoneNumber',
+    name: 'phone',
     label: 'Phone Number',
     placeholder: 'Phone Number',
     secureTextEntry: false,
