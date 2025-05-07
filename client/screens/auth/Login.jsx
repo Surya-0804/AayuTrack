@@ -9,9 +9,9 @@ import {
   TouchableWithoutFeedback,
   Pressable,
 } from 'react-native';
-import * as Font from 'expo-font';
-import { Feather } from '@expo/vector-icons'; // Import Expo's built-in icons
 import CustomInput from '../../components/auth/CustomInput';
+import { loginUser } from '../../api/authServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -19,14 +19,34 @@ const Login = ({ navigation }) => {
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const handleSignupPress = () => {
-    // Handle navigation to signup screen
-    // const ok = alert('Navigate to Signup Screen');
-    // if (ok) {
-    // Navigate to the signup screen
     navigation.navigate('Signup');
-    // }
   };
 
+  const handleLoginPress = async () => {
+    try {
+      const payload = {
+        usernameOrEmail: email,
+        password: password,
+      };
+      console.log('Form data:', payload);
+      const response = await loginUser(payload);
+      console.log('User registered:', response);
+
+      // Save token and userId to AsyncStorage
+      if (response?.token && response?.user?._id) {
+        await AsyncStorage.setItem('token', response.token);
+        await AsyncStorage.setItem('userId', response.user._id);
+      } else {
+        alert('Login succeeded, but user info was not returned properly.');
+      }
+
+      alert('User Logedin successfully!');
+      // navigation.replace('Home'); // or wherever you want to navigate
+    } catch (error) {
+      console.error('Login failed:', error.message);
+      alert(error.message || 'Something went wrong during login!');
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.upperContainer}>
@@ -69,7 +89,7 @@ const Login = ({ navigation }) => {
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLoginPress}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
