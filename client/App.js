@@ -8,7 +8,7 @@ import AppLoading from 'expo-app-loading';
 import OnboardingScreen from './screens/onboarding/OnboardingScreen';
 import Login from './screens/auth/Login';
 import Signup from './screens/auth/Signup';
-import Home from './screens/home/Home';
+import BottomTabNavigator from './navigation/CustomTabBar';
 
 const Stack = createStackNavigator();
 
@@ -34,13 +34,20 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="MainApp"
         screenOptions={{ headerShown: false }}
       >
+        {/* Auth Screens - No tabs visible */}
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Home" component={Home} />
+
+        {/* Main App - With tabs visible */}
+        <Stack.Screen
+          name="MainApp"
+          component={BottomTabNavigator}
+          options={{ gestureEnabled: false }} // Prevent swipe back to auth
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
