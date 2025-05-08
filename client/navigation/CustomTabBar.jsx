@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 
 // Screens (replace with your actual screens)
 import Home from '../screens/home/Home';
@@ -15,24 +15,54 @@ const CustomTabBarIcon = ({
   isCenter = false,
   IconComponent = Ionicons,
 }) => {
+  // Animation for tab press
+  const scaleValue = React.useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (focused) {
+      // When tab becomes focused, create a subtle pop effect
+      Animated.sequence([
+        Animated.timing(scaleValue, {
+          toValue: 1.2,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleValue, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [focused, scaleValue]);
+
   return (
-    <View style={[styles.tabContainer, isCenter && styles.centerTabContainer]}>
+    <Animated.View
+      style={[
+        styles.tabContainer,
+        isCenter && styles.centerTabContainer,
+        { transform: [{ scale: isCenter ? 1 : scaleValue }] },
+      ]}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`${label} tab`}
+      accessibilityState={{ selected: focused }}
+    >
       <IconComponent
         name={iconName}
-        size={24}
+        size={isCenter ? 28 : 22}
         color={isCenter ? 'white' : focused ? '#1BD967' : '#888'}
       />
-      {label && (
+      {!isCenter && (
         <Text
-          style={[
-            isCenter ? styles.centerTabLabel : styles.tabLabel,
-            !isCenter && focused && styles.tabLabelFocused,
-          ]}
+          style={[styles.tabLabel, focused && styles.tabLabelFocused]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
         >
           {label}
         </Text>
       )}
-    </View>
+    </Animated.View>
   );
 };
 
@@ -41,7 +71,13 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: styles.tabBar,
-        tabBarShowLabel: false, // Hide default labels since we use custom ones
+        tabBarShowLabel: false,
+        tabBarHideOnKeyboard: true,
+        tabBarItemStyle: {
+          height: 65,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
       }}
     >
       <Tab.Screen
@@ -75,14 +111,14 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Calendar"
-        component={Home} // Replace with your History screen
+        component={Home} // Replace with your Calendar screen
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <CustomTabBarIcon
               focused={focused}
               iconName={focused ? 'calendar' : 'calendar-outline'}
-              // label="History"
+              label="Calendar"
               isCenter
             />
           ),
@@ -90,7 +126,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="History"
-        component={Home} // Replace with your Clock screen
+        component={Home} // Replace with your History screen
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -130,42 +166,57 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
+    paddingBottom: 0,
+    paddingTop: 15,
+    paddingHorizontal: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 10,
+      },
+    }),
   },
   tabContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1, // This will help in centering the icons
-    paddingTop: 8, // Adjust this value as needed
-    width: 80,
+    paddingVertical: 5,
+    width: 70,
+    height: 55,
   },
   centerTabContainer: {
     backgroundColor: '#1BD967',
-    borderWidth: 5,
+    borderWidth: 4,
     borderColor: 'white',
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    marginTop: -20,
-    paddingTop: 0,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    marginTop: -25,
+    paddingVertical: 0,
     justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 2,
   },
   tabLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'Nunito',
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#888',
-    marginTop: 4,
+    marginTop: 3,
+    textAlign: 'center',
+    paddingHorizontal: 2,
   },
   tabLabelFocused: {
     color: '#1BD967',
-    fontWeight: '900',
-  },
-  centerTabLabel: {
-    color: 'white',
-    fontSize: 12,
-    fontFamily: 'Nunito',
     fontWeight: '700',
-    marginTop: 4,
   },
 });
 
