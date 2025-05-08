@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import CustomInput from '../../components/auth/CustomInput';
 import { signupFields } from '../../constants/signupField';
+import { registerUser } from '../../api/authServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Signup = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -19,7 +21,7 @@ const Signup = ({ navigation }) => {
     email: '',
     password: '',
     confirmPassword: '',
-    phoneNumber: '',
+    phone: '',
     age: '',
     gender: '',
   });
@@ -31,8 +33,31 @@ const Signup = ({ navigation }) => {
     });
   };
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
+  const handleSubmit = async () => {
+    try {
+      const { password, confirmPassword, ...rest } = formData;
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      const payload = { ...rest, password }; // remove confirmPassword
+      console.log('Form data (cleaned):', payload);
+
+      const response = await registerUser(payload);
+      console.log('User registered:', response);
+
+      await AsyncStorage.setItem('token', response.token);
+      alert('User registered successfully!');
+      // navigation.replace('Home');
+    } catch (error) {
+      console.error(
+        'Registration failed:',
+        error?.response?.data?.message || error.message
+      );
+      alert(error?.response?.data?.message || 'Registration failed!');
+    }
   };
 
   return (
