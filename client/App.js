@@ -8,6 +8,7 @@ import AppLoading from 'expo-app-loading';
 import OnboardingScreen from './screens/onboarding/OnboardingScreen';
 import Login from './screens/auth/Login';
 import Signup from './screens/auth/Signup';
+import Home from './screens/home/Home';
 
 const Stack = createStackNavigator();
 
@@ -33,12 +34,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Onboarding"
+        initialRouteName="Home"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );

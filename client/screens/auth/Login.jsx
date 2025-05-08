@@ -41,7 +41,7 @@ const Login = ({ navigation }) => {
       }
 
       alert('User Logedin successfully!');
-      // navigation.replace('Home'); // or wherever you want to navigate
+      navigation.replace('Home'); // or wherever you want to navigate
     } catch (error) {
       console.error('Login failed:', error.message);
       alert(error.message || 'Something went wrong during login!');
