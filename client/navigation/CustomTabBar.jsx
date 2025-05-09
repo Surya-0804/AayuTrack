@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
-
-// Screens (replace with your actual screens)
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Platform,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Home from '../screens/home/Home';
 
 const Tab = createBottomTabNavigator();
@@ -15,12 +20,10 @@ const CustomTabBarIcon = ({
   isCenter = false,
   IconComponent = Ionicons,
 }) => {
-  // Animation for tab press
   const scaleValue = React.useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (focused) {
-      // When tab becomes focused, create a subtle pop effect
       Animated.sequence([
         Animated.timing(scaleValue, {
           toValue: 1.2,
@@ -92,11 +95,27 @@ const BottomTabNavigator = () => {
               label="Home"
             />
           ),
+          tabBarButton: ({
+            onPress,
+            accessibilityRole,
+            accessibilityState,
+            accessibilityLabel,
+            children,
+          }) => (
+            <TouchableWithoutFeedback
+              onPress={onPress}
+              accessibilityRole={accessibilityRole}
+              accessibilityState={accessibilityState}
+              accessibilityLabel={accessibilityLabel}
+            >
+              <View>{children}</View>
+            </TouchableWithoutFeedback>
+          ),
         }}
       />
       <Tab.Screen
         name="Medicine"
-        component={Home} // Replace with your Medicine screen
+        component={Home}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -107,11 +126,27 @@ const BottomTabNavigator = () => {
               IconComponent={MaterialCommunityIcons}
             />
           ),
+          tabBarButton: ({
+            onPress,
+            accessibilityRole,
+            accessibilityState,
+            accessibilityLabel,
+            children,
+          }) => (
+            <TouchableWithoutFeedback
+              onPress={onPress}
+              accessibilityRole={accessibilityRole}
+              accessibilityState={accessibilityState}
+              accessibilityLabel={accessibilityLabel}
+            >
+              <View>{children}</View>
+            </TouchableWithoutFeedback>
+          ),
         }}
       />
       <Tab.Screen
         name="Calendar"
-        component={Home} // Replace with your Calendar screen
+        component={Home}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -122,11 +157,27 @@ const BottomTabNavigator = () => {
               isCenter
             />
           ),
+          tabBarButton: ({
+            onPress,
+            accessibilityRole,
+            accessibilityState,
+            accessibilityLabel,
+            children,
+          }) => (
+            <TouchableWithoutFeedback
+              onPress={onPress}
+              accessibilityRole={accessibilityRole}
+              accessibilityState={accessibilityState}
+              accessibilityLabel={accessibilityLabel}
+            >
+              <View>{children}</View>
+            </TouchableWithoutFeedback>
+          ),
         }}
       />
       <Tab.Screen
         name="History"
-        component={Home} // Replace with your History screen
+        component={Home}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -136,11 +187,27 @@ const BottomTabNavigator = () => {
               label="History"
             />
           ),
+          tabBarButton: ({
+            onPress,
+            accessibilityRole,
+            accessibilityState,
+            accessibilityLabel,
+            children,
+          }) => (
+            <TouchableWithoutFeedback
+              onPress={onPress}
+              accessibilityRole={accessibilityRole}
+              accessibilityState={accessibilityState}
+              accessibilityLabel={accessibilityLabel}
+            >
+              <View>{children}</View>
+            </TouchableWithoutFeedback>
+          ),
         }}
       />
       <Tab.Screen
         name="Profile"
-        component={Home} // Replace with your Profile screen
+        component={Home}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -150,6 +217,22 @@ const BottomTabNavigator = () => {
               label="Profile"
             />
           ),
+          tabBarButton: ({
+            onPress,
+            accessibilityRole,
+            accessibilityState,
+            accessibilityLabel,
+            children,
+          }) => (
+            <TouchableWithoutFeedback
+              onPress={onPress}
+              accessibilityRole={accessibilityRole}
+              accessibilityState={accessibilityState}
+              accessibilityLabel={accessibilityLabel}
+            >
+              <View>{children}</View>
+            </TouchableWithoutFeedback>
+          ),
         }}
       />
     </Tab.Navigator>
@@ -158,7 +241,7 @@ const BottomTabNavigator = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 80,
+    height: 65,
     backgroundColor: 'white',
     borderTopWidth: 0,
     elevation: 10,
@@ -166,8 +249,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    paddingBottom: 0,
-    paddingTop: 15,
     paddingHorizontal: 5,
     ...Platform.select({
       ios: {
@@ -184,19 +265,19 @@ const styles = StyleSheet.create({
   tabContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 5,
-    width: 70,
-    height: 55,
+    paddingVertical: 0,
+    width: 60,
+    height: 65,
   },
   centerTabContainer: {
     backgroundColor: '#1BD967',
     borderWidth: 4,
     borderColor: 'white',
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginTop: -25,
-    paddingVertical: 0,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginTop: -35,
+    paddingVertical: 3,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -210,7 +291,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito',
     fontWeight: '600',
     color: '#888',
-    marginTop: 3,
+    marginTop: 2,
     textAlign: 'center',
     paddingHorizontal: 2,
   },
@@ -219,5 +300,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
 export default BottomTabNavigator;
